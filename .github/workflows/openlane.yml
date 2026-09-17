@@ -15,7 +15,7 @@ jobs:
           docker run --rm \
             -v $GITHUB_WORKSPACE:/workspace \
             -w /workspace \
-            efabless/openlane:2023.11.03_01.40.40 \
+            efabless/openlane:current \
             flow.tcl -design openlane/systolic_array_4x4 -tag gds_run -overwrite
 
       - name: Upload GDSII and Layout Artifacts
