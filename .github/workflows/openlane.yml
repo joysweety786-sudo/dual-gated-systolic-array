@@ -1,0 +1,28 @@
+name: OpenLane ASIC Hardening to GDSII
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hardening:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run OpenLane Container Flow
+        run: |
+          docker run --rm \
+            -v $GITHUB_WORKSPACE:/workspace \
+            -w /workspace \
+            efabless/openlane:2023.11.03_01.40.40 \
+            flow.tcl -design openlane/systolic_array_4x4 -tag gds_run -overwrite
+
+      - name: Upload GDSII and Layout Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: systolic-array-gds-artifacts
+          path: |
+            openlane/systolic_array_4x4/runs/gds_run/results/final/gds/*.gds
+            openlane/systolic_array_4x4/runs/gds_run/reports/metrics.csv
