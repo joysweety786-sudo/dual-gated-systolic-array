@@ -10,11 +10,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run OpenLane with Pre-installed Sky130 PDK
-        uses: efabless/openlane-action@v1
-        with:
-          design_dir: openlane/systolic_array_4x4
-          run_tag: gds_run
+      - name: Run OpenLane Flow
+        run: |
+          docker run --rm \
+            -v $GITHUB_WORKSPACE:/openlane/designs/project \
+            efabless/openlane:v0.9 \
+            ./flow.tcl -design /openlane/designs/project/openlane/systolic_array_4x4 -tag gds_run -overwrite
 
       - name: Upload GDSII and Layout Artifacts
         uses: actions/upload-artifact@v4
