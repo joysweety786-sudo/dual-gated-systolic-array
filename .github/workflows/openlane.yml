@@ -15,7 +15,7 @@ jobs:
           docker run --rm \
             -v $GITHUB_WORKSPACE:/workspace \
             -w /workspace \
-            ghcr.io/the-openroad-project/openlane:master \
+            efabless/openlane:v0.9 \
             flow.tcl -design openlane/systolic_array_4x4 -tag gds_run -overwrite
 
       - name: Upload GDSII and Layout Artifacts
