@@ -10,13 +10,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Harden Design using IIC-OSIC Tools (Sky130 PDK Pre-installed)
+      - name: Run OpenLane Flow via IIC-OSIC
         run: |
           docker run --rm \
             -v $GITHUB_WORKSPACE:/workspace \
             -w /workspace \
-            efabless/openlane:mpw-6a \
-            flow.tcl -design openlane/systolic_array_4x4 -tag gds_run -overwrite
+            hpretl/iic-osic-tools:latest \
+            bash -c "openlane --design /workspace/openlane/systolic_array_4x4 --tag gds_run --overwrite"
 
       - name: Upload GDSII and Layout Artifacts
         uses: actions/upload-artifact@v4
