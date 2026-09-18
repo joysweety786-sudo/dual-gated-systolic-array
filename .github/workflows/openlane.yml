@@ -12,6 +12,10 @@ jobs:
 
       - name: Setup OpenLane and Sky130 PDK
         run: |
+          # Install required host dependencies (tcllib) for the OpenLane wrapper
+          sudo apt-get update
+          sudo apt-get install -y tcl tcllib
+          
           # Clone the official OpenLane repository
           git clone --depth 1 https://github.com/The-OpenROAD-Project/OpenLane.git ~/OpenLane
           cd ~/OpenLane
@@ -19,13 +23,13 @@ jobs:
           # Pull the exact Docker image required for this OpenLane version
           make pull-openlane
           
-          # Auto-download the correct Sky130 PDK using built-in Volare (takes ~1 min)
+          # Auto-download the correct Sky130 PDK using built-in Volare
           make pdk
 
       - name: Run OpenLane Hardening
         run: |
           cd ~/OpenLane
-          # The OpenLane wrapper script automatically handles all Docker mounts and paths!
+          # The OpenLane wrapper script automatically handles all Docker mounts
           ./flow.tcl -design $GITHUB_WORKSPACE/openlane/systolic_array_4x4 -tag gds_run -overwrite
 
       - name: Upload GDSII and Layout Artifacts
