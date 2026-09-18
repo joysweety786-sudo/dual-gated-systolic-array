@@ -12,15 +12,14 @@ jobs:
 
       - name: Setup OpenLane and Sky130 PDK
         run: |
-          # Install required host dependencies (tcllib) for the OpenLane wrapper
           sudo apt-get update
           sudo apt-get install -y tcl tcllib
           
-          # Clone the official OpenLane repository
-          git clone --depth 1 https://github.com/The-OpenROAD-Project/OpenLane.git ~/OpenLane
+          # Clone the specific stable v1 version (2023.11.23) instead of unstable master
+          git clone --depth 1 --branch 2023.11.23 https://github.com/The-OpenROAD-Project/OpenLane.git ~/OpenLane
           cd ~/OpenLane
           
-          # Pull the exact Docker image required for this OpenLane version
+          # Pull the exact Docker image required for this specific OpenLane version
           make pull-openlane
           
           # Auto-download the correct Sky130 PDK using built-in Volare
