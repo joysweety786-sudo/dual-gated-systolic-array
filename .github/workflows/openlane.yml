@@ -6,24 +6,20 @@ on:
 jobs:
   hardening:
     runs-on: ubuntu-latest
+    # This natively runs the entire job INSIDE the ASIC container
+    container:
+      image: hpretl/iic-osic-tools:latest
+      options: --user root
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install OpenLane and Sky130 PDK
-        run: |
-          pip install --upgrade pip
-          pip install openlane volare
-          volare enable --pdk sky130 $(volare ls-remote --pdk sky130 | head -n 1)
-
       - name: Run OpenLane Hardening
         run: |
-          openlane openlane/systolic_array_4x4/config.json --run-tag gds_run
+          # Set explicit PDK paths and run the TCL flow directly
+          export PDK_ROOT=/foss/pdks
+          export PDK=sky130A
+          /foss/tools/openlane/flow.tcl -design openlane/systolic_array_4x4 -tag gds_run -overwrite
 
       - name: Upload GDSII and Layout Artifacts
         uses: actions/upload-artifact@v4
@@ -31,5 +27,5 @@ jobs:
         with:
           name: systolic-array-gds-artifacts
           path: |
-            openlane/systolic_array_4x4/runs/gds_run/final/gds/*.gds
+            openlane/systolic_array_4x4/runs/gds_run/results/final/gds/*.gds
             openlane/systolic_array_4x4/runs/gds_run/reports/metrics.csv
