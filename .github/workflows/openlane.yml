@@ -18,8 +18,8 @@ jobs:
       - name: Install OpenLane and Sky130 PDK
         run: |
           pip install --upgrade pip
-          pip install openlane
-          volare enable --pdk sky130
+          pip install openlane volare
+          volare enable --pdk sky130 $(volare ls-remote --pdk sky130 | head -n 1)
 
       - name: Run OpenLane Hardening
         run: |
