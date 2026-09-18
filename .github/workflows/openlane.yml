@@ -6,20 +6,27 @@ on:
 jobs:
   hardening:
     runs-on: ubuntu-latest
-    # This natively runs the entire job INSIDE the ASIC container
-    container:
-      image: hpretl/iic-osic-tools:latest
-      options: --user root
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Setup OpenLane and Sky130 PDK
+        run: |
+          # Clone the official OpenLane repository
+          git clone --depth 1 https://github.com/The-OpenROAD-Project/OpenLane.git ~/OpenLane
+          cd ~/OpenLane
+          
+          # Pull the exact Docker image required for this OpenLane version
+          make pull-openlane
+          
+          # Auto-download the correct Sky130 PDK using built-in Volare (takes ~1 min)
+          make pdk
+
       - name: Run OpenLane Hardening
         run: |
-          # Set explicit PDK paths and run the TCL flow directly
-          export PDK_ROOT=/foss/pdks
-          export PDK=sky130A
-          /foss/tools/openlane/flow.tcl -design openlane/systolic_array_4x4 -tag gds_run -overwrite
+          cd ~/OpenLane
+          # The OpenLane wrapper script automatically handles all Docker mounts and paths!
+          ./flow.tcl -design $GITHUB_WORKSPACE/openlane/systolic_array_4x4 -tag gds_run -overwrite
 
       - name: Upload GDSII and Layout Artifacts
         uses: actions/upload-artifact@v4
