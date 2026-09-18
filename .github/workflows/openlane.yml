@@ -16,7 +16,7 @@ jobs:
             -v $GITHUB_WORKSPACE:/workspace \
             -w /workspace \
             hpretl/iic-osic-tools:latest \
-            -s /foss/tools/openlane/flow.tcl -design /workspace/openlane/systolic_array_4x4 -tag gds_run -overwrite
+            -s bash -c "FLOW_PATH=\$(find / -name flow.tcl 2>/dev/null | head -n 1); echo \"Found flow.tcl at \$FLOW_PATH\"; \$FLOW_PATH -design /workspace/openlane/systolic_array_4x4 -tag gds_run -overwrite"
 
       - name: Upload GDSII and Layout Artifacts
         uses: actions/upload-artifact@v4
