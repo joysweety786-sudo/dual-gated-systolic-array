@@ -16,7 +16,7 @@ jobs:
             -v $GITHUB_WORKSPACE:/workspace \
             -w /workspace \
             hpretl/iic-osic-tools:latest \
-            -s openlane --design /workspace/openlane/systolic_array_4x4 --tag gds_run --overwrite
+            -s /foss/tools/openlane/flow.tcl -design /workspace/openlane/systolic_array_4x4 -tag gds_run -overwrite
 
       - name: Upload GDSII and Layout Artifacts
         uses: actions/upload-artifact@v4
