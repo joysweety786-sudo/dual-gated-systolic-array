@@ -19,7 +19,7 @@ Hardened to a physical GDSII layout using the open-source SkyWater 130nm (`sky13
 ---
 
 ## Physical Design Summary (SkyWater 130nm)
-
+![Systolic Array Physical Layout](gds_layout.png)
 | Metric | Signoff Value |
 | :--- | :--- |
 | **Technology Node** | SkyWater 130nm (`sky130A`) |
